@@ -18,7 +18,7 @@
             document.querySelector(".outputa").innerHTML = AOSOoutputString;
         });
         socket.on("GYdata", (data) => {
-            let GYoutputString = `Gyroscope - x: ${Math.round(data.x * 1000) / 1000}, y: ${Math.round(data.y * 1000) / 1000}, z: ${Math.round(data.z * 1000) / 1000}`;
+            let GYoutputString = `Gyroscope - x: ${Math.round(data[0] * 1000) / 1000}, y: ${Math.round(data[1] * 1000) / 1000}, z: ${Math.round(data[2] * 1000) / 1000}`;
             document.querySelector(".outputb").innerHTML = GYoutputString;
         });
     });

@@ -63,7 +63,7 @@ GY.addEventListener("reading", () => {
 // round to 3 decimal places
 let GYoutputString = `Gyroscope - x: ${Math.round(GY.x * 1000) / 1000}, y: ${Math.round(GY.y * 1000) / 1000}, z: ${Math.round(GY.z * 1000) / 1000}`;
 document.querySelector(".outputb").innerHTML = GYoutputString;
-socket.emit("GYdata",GY);
+socket.emit("GYdata",[GY.x,GY.y,GY.z]);
 });
 GY.addEventListener("error", (error) => {
   if (event.error.name === "NotReadableError") {
