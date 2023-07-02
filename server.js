@@ -11,8 +11,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', function (socket) {
     // send the connected client a message
     socket.emit('connected', { message: "You are connected!" });
+    console.log('A client connected!');
     // when a message is received, send it to all other clients
     socket.on('message', function (data) {
+        console.log('Message received', data);
         socket.broadcast.emit('message', data);
     });
 });

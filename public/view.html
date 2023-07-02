@@ -12,6 +12,7 @@
 <script>
     const socket = io();
     socket.on("connect", () => {
+        console.log("id: " + socket.id)
         socket.on("AOSdata", (data) => {
             let AOSOoutputString = `AbsoluteOrientationSensor - alpha: ${Math.round(data[0] * 1000) / 1000}, beta: ${Math.round(data[1] * 1000) / 1000}, gamma: ${Math.round(data[2] * 1000) / 1000}`;
             document.querySelector(".outputa").innerHTML = AOSOoutputString;
