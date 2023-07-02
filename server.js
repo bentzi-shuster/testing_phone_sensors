@@ -9,14 +9,18 @@ const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
 // when a client connects, do this
 io.on('connection', function (socket) {
-    // send the connected client a message
-    socket.emit('connected', { message: "You are connected!" });
-    console.log('A client connected!');
+
     // when a message is received, send it to all other clients
-    socket.on('message', function (data) {
+    socket.on('AOSdata', function (data) {
         console.log('Message received', data);
-        socket.broadcast.emit('message', data);
+        socket.broadcast.emit('AOSdata', data);
     });
+socket.on('GYdata', function (data) {
+        console.log('Message received', data);
+        socket.broadcast.emit('GYdata', data);
+    }
+);
+ 
 });
 // start the server
 server.listen(port, function () {
