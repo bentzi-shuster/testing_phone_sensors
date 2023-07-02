@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server); // pass in the server to socket.io
-const port = 3000||process.env.PORT;
+const port = process.env.PORT || 3000;
 const path = require('path');
 // serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
