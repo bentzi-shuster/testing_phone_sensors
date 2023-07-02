@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test</title>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+</head>
+<body>
+<a href="./view.html">View The output</a>
+    <div class="outputa">
+
+    </div>
+    <div class="outputb">
+
+    </div>
+    <div class="outputc">
+
+    </div>
+<button class="start">Start</button>
+<button class="stop">Stop</button>
+    <script>
+
+      const socket = io();
+      socket.on("connect", () => {
+
+
+document.querySelector(".outputa").innerHTML = window.AbsoluteOrientationSensor? "browser supports AbsoluteOrientationSensor" : "browser does not support AbsoluteOrientationSensor";
+
+let AOS,GY;
+
+
+
+document.querySelector(".start").addEventListener("click", () => {
+try{
+    if(navigator.permissions){
+Promise.all([
+  navigator.permissions.query({ name: "accelerometer" }),
+  navigator.permissions.query({ name: "magnetometer" }),
+  navigator.permissions.query({ name: "gyroscope" }),
+]).then((results) => {
+  if (results.every((result) => result.state === "granted")) {
+    AOS = new AbsoluteOrientationSensor({ frequency: 60, referenceFrame: "device" })
+    GY = new Gyroscope({ frequency: 60 })
+    AOS.start();
+    GY.start();
+
+    document.querySelector(".outputa").innerHTML = "Permission to use sensors granted.";
+    try{
+      AOS.addEventListener("reading", () => {
+
+// document.querySelector(".outputb").innerHTML = AOS.quaternion[1];
+// document.querySelector(".outputc").innerHTML = AOS.quaternion[2];
+// document.querySelector(".outputa").innerHTML = AOS.quaternion[0];
+// let AOSOoutputString = `AbsoluteOrientationSensor - alpha: ${AOS.quaternion[0]}, beta: ${AOS.quaternion[1]}, gamma: ${AOS.quaternion[2]}`;
+// round to 3 decimal places
+let AOSOoutputString = `AbsoluteOrientationSensor - alpha: ${Math.round(AOS.quaternion[0] * 1000) / 1000}, beta: ${Math.round(AOS.quaternion[1] * 1000) / 1000}, gamma: ${Math.round(AOS.quaternion[2] * 1000) / 1000}`;
+document.querySelector(".outputa").innerHTML = AOSOoutputString;
+socket.emit("AOSdata",AOS.quaternion);
+});
+GY.addEventListener("reading", () => {
+//  GYoutputString = `Gyroscope - x: ${GY.x}, y: ${GY.y}, z: ${GY.z}`;
+// round to 3 decimal places
+let GYoutputString = `Gyroscope - x: ${Math.round(GY.x * 1000) / 1000}, y: ${Math.round(GY.y * 1000) / 1000}, z: ${Math.round(GY.z * 1000) / 1000}`;
+document.querySelector(".outputb").innerHTML = GYoutputString;
+socket.emit("GYdata",GY);
+});
+GY.addEventListener("error", (error) => {
+  if (event.error.name === "NotReadableError") {
+    document.querySelector(".outputb").innerHTML = "Sensor is not available.";
+  }
+});
+AOS.addEventListener("error", (error) => {
+  if (event.error.name === "NotReadableError") {
+    document.querySelector(".outputa").innerHTML = "Sensor is not available.";
+  }
+});
+}catch(e){
+    document.querySelector(".outputa").innerHTML = e.message;
+    document.querySelector(".outputb").innerHTML = 2;
+}
+    // …
+  } else {
+    document.querySelector(".outputa").innerHTML = "No permissions to use AbsoluteOrientationSensor.";
+    }
+    });}
+}catch(e){
+    document.querySelector(".outputa").innerHTML = e.message;
+    document.querySelector(".outputb").innerHTML = 1;
+}
+});
+
+document.querySelector(".stop").addEventListener("click", () => {
+    AOS.stop();
+    GY.stop();
+    document.querySelector(".outputa").innerHTML = "Stopped";
+    document.querySelector(".outputb").innerHTML = "Stopped";
+    document.querySelector(".outputc").innerHTML = "Stopped";
+});
+
+
+});
+
+
+
+
+</script>
+</body>
+</html>

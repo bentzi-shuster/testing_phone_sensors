@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View</title>
+</head>
+<body>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+    <div class="outputa"></div>
+    <div class="outputb"></div>
+<script>
+    const socket = io();
+    socket.on("connect", () => {
+        socket.on("AOSdata", (data) => {
+            let AOSOoutputString = `AbsoluteOrientationSensor - alpha: ${Math.round(data[0] * 1000) / 1000}, beta: ${Math.round(data[1] * 1000) / 1000}, gamma: ${Math.round(data[2] * 1000) / 1000}`;
+            document.querySelector(".outputa").innerHTML = AOSOoutputString;
+        });
+        socket.on("GYdata", (data) => {
+            let GYoutputString = `Gyroscope - x: ${Math.round(data[0] * 1000) / 1000}, y: ${Math.round(data[1] * 1000) / 1000}, z: ${Math.round(data[2] * 1000) / 1000}`;
+            document.querySelector(".outputb").innerHTML = GYoutputString;
+        });
+    });
+
+</script>
+</body>
+</html>
