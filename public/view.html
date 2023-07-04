@@ -9,137 +9,19 @@
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
     <div class="outputa"></div>
     <div class="outputb"></div>
-
-
-    <div class="card">
-        <img src="./ac64227565eb41aeb6be95febb1f452a-removebg-preview.png" alt="">
-        <div class="circle"></div>
-      </div>
-      
-      
-      <style>
-      .card {
-           background-color: rgb(202, 202, 202);
-           border-radius: 50%;
-           aspect-ratio: 1/1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 50px;
-        border: 20px solid black;
-          }
-          body {
-              height: 70vh;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              background-color: #f5f5f5;
-          }
-      
-      </style> 
-
 <script>
     const socket = io();
-
-
-
-   
     socket.on("connect", () => {
-
-
-
-
-
-
-
-
-
-
-    function sensorMove(alpha, beta, gamma, cards, imgs, range) {
-  const x = gamma*10000
-  const y = beta*10000
-
-  for (let i = 0; i < cards.length; i++) {
-    let card = cards[i];
-    if (
-      x > card.offsetLeft - range &&
-      x < card.offsetLeft + card.clientWidth + range &&
-      y > card.offsetTop - range &&
-      y < card.offsetTop + card.clientHeight + range
-    ) {
-      for (let i = 0; i < imgs.length; i++) {
-        let img = imgs[i];
-        const cardCenterX = img.offsetLeft + img.clientWidth / 2;
-        const cardCenterY = img.offsetTop + img.clientHeight / 2;
-        const distanceX = x - cardCenterX;
-        const distanceY = y - cardCenterY;
-        img.style.transform = `rotateX(${-distanceY / 10}deg) rotateY(${distanceX / 15}deg) translateZ(50px)`;
-      }
-    } else {
-      for (let i = 0; i < imgs.length; i++) {
-        let img = imgs[i];
-        img.style.transform = `rotateX(0deg) rotateY(0deg) translateZ(0px)`;
-      }
-    }
-  }
-}
-
-function cardEffects(cards, animationSpeed = 1 / 3, range = 50) {
-  let imgs = [];
-  for (let i = 0; i < cards.length; i++) {
-    const card = cards[i];
-    imgsInCard = card.querySelectorAll('img');
-    imgs = [...imgs, ...imgsInCard];
-  }
-
-  for (let i = 0; i < imgs.length; i++) {
-    let img = imgs[i];
-    img.style.width = '95%';
-    img.style.height = '95%';
-    img.style.filter = 'drop-shadow(-5px 5px 2px rgba(0, 0, 0, 0.25))';
-    img.style.transformOrigin = 'center center';
-    img.style.userSelect = 'none';
-    img.style.pointerEvents = 'none';
-  }
-
-  console.log("id: " + socket.id)
+        console.log("id: " + socket.id)
         socket.on("AOSdata", (data) => {
-            console.log(data);
             let AOSOoutputString = `AbsoluteOrientationSensor - alpha: ${Math.round(data[0] * 1000) / 1000}, beta: ${Math.round(data[1] * 1000) / 1000}, gamma: ${Math.round(data[2] * 1000) / 1000}`;
             document.querySelector(".outputa").innerHTML = AOSOoutputString;
-            sensorMove(AOSOoutputString[0], AOSOoutputString[1], AOSOoutputString[2], cards, imgs, range);
         });
         socket.on("GYdata", (data) => {
             let GYoutputString = `Gyroscope - x: ${Math.round(data[0] * 1000) / 1000}, y: ${Math.round(data[1] * 1000) / 1000}, z: ${Math.round(data[2] * 1000) / 1000}`;
             document.querySelector(".outputb").innerHTML = GYoutputString;
         });
- 
-
-  window.addEventListener('pointerdown', (e) => {
-    for (let i = 0; i < imgs.length; i++) {
-      let img = imgs[i];
-      img.style.scale = '1.25';
-      img.style.translateZ = '100px';
-      img.style.perpective = '1000px';
-    }
-  });
-
-  window.addEventListener('pointerup', (e) => {
-    for (let i = 0; i < imgs.length; i++) {
-      let img = imgs[i];
-      img.style.scale = '1';
-      img.style.translateZ = '0px';
-      img.style.perpective = '0px';
-    }
-  });
-}
-
-const cards = document.querySelectorAll('.card');
-cardEffects(cards, 1 / 3, 1200);
-
-
-});
-
+    });
 
 </script>
 </body>
